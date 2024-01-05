@@ -1,0 +1,41 @@
+﻿@model List<Project2PHE.Models.Employee>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@for (var i = 0; i < Model.Count; i++)
+{
+    var employee = Model[i];
+    <div>
+        <h4>@employee.FirstName @employee.LastName</h4>
+        <hr />
+        <dl class="row">
+            <dt>
+                @Html.DisplayNameFor(model => model[i].FirstName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model[i].FirstName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model[i].LastName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model[i].LastName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model[i].Email)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model[i].Email)
+            </dd>
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = employee.Guid }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

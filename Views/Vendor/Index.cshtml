@@ -1,0 +1,94 @@
+﻿@model List<Project2PHE.Models.Vendor>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Vendor List</h2>
+
+<label>
+    <input type="checkbox" id="toggleDeleted" checked />
+    Show Deleted Vendors
+</label>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Company Name</th>
+            <th>Company Email</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Photo</th>
+            <th>Create Date</th>
+            <th>Is Approved</th>
+            <th>Approved By</th>
+            <th>Is Deleted</th>
+            <th>Business Field</th>
+            <th>Business Type</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vendor in Model)
+        {
+            <tr class="@(vendor.IsDeleted ? "deleted" : "")">
+                <td>@Html.DisplayFor(modelItem => vendor.CompanyName)</td>
+                <td>@Html.DisplayFor(modelItem => vendor.CompanyEmail)</td>
+                <td>@Html.DisplayFor(modelItem => vendor.Address)</td>
+                <td>@Html.DisplayFor(modelItem => vendor.Phone)</td>
+                <td>
+                    @{
+                        var base64 = String.Empty;
+                        var imgSrc = String.Empty;
+                        if (vendor.Photo != null)
+                        {
+                            base64 = Convert.ToBase64String(vendor.Photo);
+                            imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                        }
+                    }
+                    @if (!String.IsNullOrEmpty(imgSrc))
+                    {
+                        <img src="@imgSrc" width="100" height="100" />
+                    }
+                    else
+                    {
+                        <text>No Image</text>
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => vendor.CreateDate)</td>
+                <td>@Html.DisplayFor(modelItem => vendor.IsApproved)</td>
+                <td>@Html.DisplayFor(modelItem => vendor.ApprovedBy)</td>
+                <td>@Html.DisplayFor(modelItem => vendor.IsDeleted)</td>
+                <td>@Html.DisplayFor(modelItem => vendor.BusinessField)</td>
+                <td>@Html.DisplayFor(modelItem => vendor.BusinessType)</td>
+                <td>
+                    @if (!vendor.IsApproved && !vendor.IsDeleted)
+                    {
+                        using (Html.BeginForm("ApproveVendor", "Vendor", new { guid = vendor.Guid }, FormMethod.Post))
+                        {
+                            <input type="submit" value="Accept" />
+                        }
+                        <text> | </text>
+                        using (Html.BeginForm("RejectVendor", "Vendor", new { guid = vendor.Guid }, FormMethod.Post))
+                        {
+                            <input type="submit" value="Reject" />
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#toggleDeleted').change(function() {
+            if (this.checked) {
+                $('.deleted').show();
+            } else {
+                $('.deleted').hide();
+            }
+        }).change();  // Trigger the change event to hide the deleted vendors initially
+    });
+</script>
